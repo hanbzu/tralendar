@@ -58,13 +58,9 @@ module.exports = (grunt) ->
         files: 'src/*.coffee'
         tasks: ['coffee:compile']
 
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-coffeelint'
-  grunt.loadNpmTasks 'grunt-contrib-jshint'
-  grunt.loadNpmTasks 'grunt-contrib-concat'
-  grunt.loadNpmTasks 'grunt-contrib-uglify'
-  grunt.loadNpmTasks 'grunt-simple-mocha'
-  grunt.loadNpmTasks 'grunt-contrib-watch'
+  require('matchdep')
+    .filterDev('grunt-*')
+    .forEach(grunt.loadNpmTasks)
 
   grunt.registerTask 'development', ['coffeelint', 'jshint', 'coffee', 'simplemocha']
   grunt.registerTask 'default', ['development', 'concat', 'uglify']
