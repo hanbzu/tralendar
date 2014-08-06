@@ -12,7 +12,7 @@ module.exports = (grunt) ->
 
     jshint:
       options:
-        asi: 'true' # No line length limits, please
+        asi: 'true' # No obligation to use semicolons
         quotmark: 'single'
       app: ['gruntfile.js', 'test/*.js', 'src/**/*.js']
 
@@ -44,23 +44,33 @@ module.exports = (grunt) ->
       options:
         globals: ['expect']
         timeout: 3000
-        ignoreLeaks: false
+        ignoreLeaks: true # Because I happen to bump into globals when using benv
         ui: 'bdd'
-        reporter: 'tap'
+        reporter: 'nyan'
       all:
         src: ['test/**/*.js']
 
     watch:
       scripts:
-        files: ['gruntfile.js', 'src/*.js', 'test/**/*.js']
+        files: ['gruntfile.coffee', 'gruntfile.js', 'src/*.js', 'test/**/*.js']
         tasks: ['development']
       coffee:
         files: 'src/*.coffee'
         tasks: ['coffee:compile']
 
+    bower: # It installs bower packages
+      install:
+        options:
+          targetDir: 'bower_components',
+          copy: false,
+          verbose: true,
+          bowerOptions:
+            forceLatest: true
+
+  # Matchdep loads all the npm packages starting with grunt-
   require('matchdep')
     .filterDev('grunt-*')
     .forEach(grunt.loadNpmTasks)
 
   grunt.registerTask 'development', ['coffeelint', 'jshint', 'coffee', 'simplemocha']
-  grunt.registerTask 'default', ['development', 'concat', 'uglify']
+  grunt.registerTask 'default', ['bower', 'development', 'concat', 'uglify']

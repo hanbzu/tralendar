@@ -15,8 +15,8 @@
     "index.html"
   ],
   "dependencies": {
-    "bootstrap": "~3.2.0",
+    "bootstrap": "~3.2",
     "d3": "~3",
-    "moment": "~2.7.0"
+    "moment": "~2.7"
   }
 }
