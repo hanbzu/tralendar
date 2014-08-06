@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tralendar</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/calendar.css">
+  </head>
+  <body>
+    <div class="container" id="here">
+
+      <ol class="calendar" id="datepicker"></ol>
+      
+    </div> <!-- /container -->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+    <script src="bower_components/moment/min/moment-with-langs.js" charset="utf-8"></script>
+    <script src="src/tralendar.js" charset="utf-8"></script>
+    <script>
+
+      var trips = [
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-15 8:30", arr: "2014-07-15 10:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-15 10:30", arr: "2014-07-15 11:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-15 12:30", arr: "2014-07-15 13:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-15 14:30", arr: "2014-07-15 15:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-15 17:30", arr: "2014-07-15 19:15" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-15 11:30", arr: "2014-07-15 12:25" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-15 13:30", arr: "2014-07-15 13:32" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-15 14:30", arr: "2014-07-15 15:30" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-15 21:30", arr: "2014-07-15 22:35" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-16 8:30", arr: "2014-07-16 10:30" }, // ----
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-16 10:30", arr: "2014-07-16 11:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-16 12:30", arr: "2014-07-16 13:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-16 14:30", arr: "2014-07-16 15:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-16 17:30", arr: "2014-07-16 19:15" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-16 11:30", arr: "2014-07-16 12:25" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-16 13:30", arr: "2014-07-16 13:32" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-16 14:30", arr: "2014-07-16 15:30" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-16 21:30", arr: "2014-07-16 22:35" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-18 8:30", arr: "2014-07-18 10:30" }, // ----
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-18 10:30", arr: "2014-07-18 11:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-18 12:30", arr: "2014-07-18 13:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-18 14:30", arr: "2014-07-18 15:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-18 17:30", arr: "2014-07-18 19:15" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-18 11:30", arr: "2014-07-18 12:25" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-18 13:30", arr: "2014-07-18 13:32" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-18 14:30", arr: "2014-07-18 15:30" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-18 21:30", arr: "2014-07-18 22:35" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-19 8:30", arr: "2014-07-19 10:30" }, // ----
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-19 10:30", arr: "2014-07-19 11:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-19 12:30", arr: "2014-07-19 13:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-19 14:30", arr: "2014-07-19 15:30" },
+        { frm: "Bilbao", to: "Donostia", dep: "2014-07-19 17:30", arr: "2014-07-19 19:15" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-19 11:30", arr: "2014-07-19 12:25" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-19 13:30", arr: "2014-07-19 13:32" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-19 14:30", arr: "2014-07-19 15:30" },
+        { frm: "Bilbao", to: "Gasteiz", dep: "2014-07-19 21:30", arr: "2014-07-19 22:35" }   
+      ]
+
+      /*
+      var times = trips.map(function(_) {
+        return moment(_.dep)
+      })
+      */
+
+      //console.log(times)
+
+      var tralendar = d3.tralendar()
+          .span(moment(), 30) // Beginning, number of days
+          .extractor(function(_) {
+            return _.dep
+          })
+
+      d3.select("#datepicker")
+            .datum(trips)
+            .call(tralendar)
+
+    </script>
+  </body>
+</html>
