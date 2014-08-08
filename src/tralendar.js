@@ -102,7 +102,7 @@ d3.tralendar = function module() {
         if (!d.isBlank) {
           li.classed('disabled', !d.hasDeparture)
             .text(moment(d.moment).format('D'))
-          if (!d.isDisabled)
+          if (d.hasDeparture)
             li.on('click', config.callback)   
         }
       }
