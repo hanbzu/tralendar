@@ -35,9 +35,7 @@ d3.select('body')
 As you can see above, in order to get notified when the user clicks on any valid day you have to provide a callback function.
 
 
-## Dependencies
-
-It uses of course [d3.js](http://d3js.org/) and [moment.js](http://momentjs.com/) internally for date handling.
+## Output
 
 This is what the generated HTML looks like:
 
@@ -72,20 +70,16 @@ This is what the generated HTML looks like:
 
 This HTML ordered list structure can be transformed to a calendar structure using the CSS file provided or your own
 
-[
-{ date: '2014-07-23', extra: '' },
 
-]
+## Dependencies
 
-{
-  '2014-07-23': {
-    text: 'hello'
-  }
-}
+It uses of course [d3.js](http://d3js.org/) and [moment.js](http://momentjs.com/) internally for date handling.
+
 
 ## Contributing
 
 Grunt is being used to manage tasks and [mocha](http://visionmedia.github.io/mocha/) is used together with [chai](http://chaijs.com/) for tests. [benv](ttps://github.com/artsy/benv) provides a minimal browser environment for d3 generated html testig.
+
 
 ## License
 
