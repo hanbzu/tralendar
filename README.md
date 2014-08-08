@@ -7,11 +7,11 @@ Data driven calendar generator in D3, suitable to do date picking and show avail
 ```javascript
 // These are the dates that CAN be chosen together with any extra info
 var rawData = [
-    { date: '2014-07-15', extra: '' },
-    { date: '2014-07-20', extra: '' },
-    { date: '2014-07-21', extra: '' },
-    { date: '2014-08-12', extra: '' },
-    { date: '2014-08-14', extra: '' }
+    { date: '2023-07-15', extra: '' },
+    { date: '2023-07-20', extra: '' },
+    { date: '2023-07-21', extra: '' },
+    { date: '2023-08-12', extra: '' },
+    { date: '2023-08-14', extra: '' }
 ]
 
 // We need to create an associative map first
@@ -20,7 +20,7 @@ var data = d3.nest()
     .map(rawData.map(function(_) { return { date: _, extra: '' } }), d3.map)
 
 var tralendar = d3.tralendar()
-    .starts('2014-07-15') // ISO 8601 dates: 'YYYY-MM-DD'
+    .starts('2023-07-15') // ISO 8601 dates: 'YYYY-MM-DD'
     .span(35) // Number of days, at least
     .callback(function(_) {
       console.log('clicked', _)
