@@ -1,0 +1,75 @@
+/*
+ * CSS Calendar
+ * Tim Wright
+ * Chris Coyier
+ -----------------------------*/
+/*
+*		{margin:0;padding:0;}
+body		{font:1em/1.4 Verdana, Arial, Helvetica, sans-serif; 
+			background: url(images/bg.jpg) top center no-repeat #545454;}
+body *		{display:inline;}
+ol.calendar    {width:52em;margin:0 auto;display:block; min-height: 200px;
+			background: url(images/tl.png) top left no-repeat; padding: 12px 0 0 20px;}
+p.link		{text-align:center;display: block;}
+*/
+ol.calendar { padding: 0 }
+
+ol.calendar li {
+  list-style:none;
+  clear: both;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  font-size: 2em;
+}
+
+ol.calendar ol {
+  padding: 20px 0px;
+}
+
+/*
+ * Day styles
+ -------------------------*/
+ol.calendar li li {
+  clear:       none;
+  width:       12%;
+  height:      2em;
+  float:       left;
+  margin:      1%;
+  padding-top: 7px;
+  overflow:    hidden;
+  border:      solid 1px #ccc;
+  color:       #747474;
+  font-size:   1.5em;
+  text-align:  center;
+  cursor:      pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.calendar li li:hover {
+  border:      solid 2px rgb(0, 207, 141);
+  padding-top: 6px;
+}
+
+/* Inactive day */
+.calendar li li.blank    { border: none; cursor: default; }
+
+/* Disabled day */
+.calendar li li.disabled { border: none; color: #ccc; cursor: default; }
+
+/* Chosen day */
+.calendar li li.chosen {
+  border: solid 1px rgb(0, 207, 141);
+  background-color: rgb(0, 207, 141);
+  color: white;
+}
+
+/* Day content (UL/OL & P) */
+.calendar li li p     { position: absolute; font-size: .3em; display: block; margin-top: -10px; }
+.calendar li li p.top { position: absolute; font-size: .3em; display: block; margin-top: -65px; }
+
