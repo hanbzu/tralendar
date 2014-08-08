@@ -37,7 +37,7 @@ d3.tralendar = function module() {
   }
 
   /** An extended calendar is nested by year-month and has padding to respect weekdays */
-  function generateExtendedCalendar(calendar, departureDays) {
+  function generateExtendedCalendar(calendar, eventDays) {
 
     /** Adds as many undefined items as extra days are in the first week of each month. */
     function addDayPadding(_) {
@@ -55,13 +55,13 @@ d3.tralendar = function module() {
     function buildItem(_) {
 
       var day = moment(_).format('YYYY-MM-DD'),
-          inDepartureDays = departureDays.has(day)
+          inEventDays = eventDays.has(day)
 
       return {
-        hasDeparture: inDepartureDays,
+        hasEvent: inEventDays,
         yearmonth: _.format('YYYY-MM'),
         moment: _,
-        extra: inDepartureDays ? departureDays.get(day).extra : ''
+        extra: inEventDays ? eventDays.get(day).extra : ''
       }
     }
 
@@ -100,9 +100,9 @@ d3.tralendar = function module() {
         li.classed('blank', d.isBlank)
 
         if (!d.isBlank) {
-          li.classed('disabled', !d.hasDeparture)
+          li.classed('disabled', !d.hasEvent)
             .text(moment(d.moment).format('D'))
-          if (d.hasDeparture)
+          if (d.hasEvent)
             li.on('click', config.callback)   
         }
       }

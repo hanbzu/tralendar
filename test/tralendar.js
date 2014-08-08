@@ -95,7 +95,7 @@ describe('tralendar.js', function() {
 
     require('../src/tralendar.js')
 
-    function tryThis(calendar, departureDays, keys, paddings) {
+    function tryThis(calendar, eventDays, keys, paddings) {
 
       function countBlankItems(_) {
         return _.values.reduce(function(previous, current) {
@@ -104,12 +104,12 @@ describe('tralendar.js', function() {
       }
     
       calendar = calendar.map(function(_) { return moment('2014-' + _ + ' 00:00', 'YYYY-MM-DD') })
-      departureDays = d3.nest()
+      eventDays = d3.nest()
                       .key(function(d) { return d.date })
-                      .map(departureDays.map(function(_) { return { date: '2014-' + _, extra: '' } }), d3.map)
+                      .map(eventDays.map(function(_) { return { date: '2014-' + _, extra: '' } }), d3.map)
 
       var tralendar = d3.tralendar(),
-          extendedCalendar = tralendar.test.extendedCalendar(calendar, departureDays),
+          extendedCalendar = tralendar.test.extendedCalendar(calendar, eventDays),
           extendedCalendarKeys = extendedCalendar.map(function(_) { return _.key }),
           extendedCalendarPaddings = extendedCalendar.map(countBlankItems)
 
