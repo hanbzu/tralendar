@@ -7,7 +7,8 @@ d3.tralendar = function module() {
   var config = {
     start: chooseFirstDay(moment().hours(0).minutes(0).seconds(0)),
     days: 35,
-    hoverCallback: function(_) { console.log('hover callback') },
+    mouseoverCallback: function(_) { console.log('mouseover callback') },
+    mouseoutCallback: function(_) { console.log('mouseout callback') },
     clickCallback: function(_) { console.log('onClick callback') }
   }
   
@@ -105,7 +106,8 @@ d3.tralendar = function module() {
           li.classed('disabled', !d.hasEvent)
             .text(moment(d.moment).format('D'))
           if (d.hasEvent) {
-            li.on('mouseover', config.hoverCallback)
+            li.on('mouseover', config.mouseoverCallback)
+            li.on('mouseout', config.mouseoutCallback)
             li.on('click', config.clickCallback)
           }   
         }
@@ -150,8 +152,13 @@ d3.tralendar = function module() {
     return this
   }
 
-  exports.hoverCallback = function(_) {
-    config.hoverCallback = _
+  exports.mouseoverCallback = function(_) {
+    config.mouseoverCallback = _
+    return this
+  }
+
+  exports.mouseoutCallback = function(_) {
+    config.mouseoutCallback = _
     return this
   }
 

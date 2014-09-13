@@ -70,7 +70,8 @@
           .starts(moment('2014-07-15', 'YYYY-MM-DD'))
           .span(span) // Number of days
           .clickCallback(dayClicked)
-          .hoverCallback(dayHover)
+          .mouseoverCallback(dayMouseover)
+          .mouseoutCallback(dayMouseout)
 
       var days = d3.nest()
           .key(function(d) { return d.date })
@@ -82,8 +83,12 @@
             .datum(days)
             .call(tralendar)
 
-      function dayHover(_) {
-        console.log('hover', moment(_.moment).format('YYYY-MM-DD'))
+      function dayMouseover(_) {
+        console.log('mouseover', moment(_.moment).format('YYYY-MM-DD'))
+      }
+
+      function dayMouseout(_) {
+        console.log('mouseout', moment(_.moment).format('YYYY-MM-DD'))
       }
 
       function dayClicked(_) {
