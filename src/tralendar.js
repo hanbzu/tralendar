@@ -5,11 +5,13 @@ if (typeof d3 === 'undefined') {
 d3.tralendar = function module() {
 
   var config = {
-        start: chooseFirstDay(moment().hours(0).minutes(0).seconds(0)),
-        days: 35,
-        callback: function(_) { console.log('onClick callback') }
-      },
-      ol // Initialise the root ol as undefined
+    start: chooseFirstDay(moment().hours(0).minutes(0).seconds(0)),
+    days: 35,
+    hoverCallback: function(_) { console.log('hover callback') },
+    clickCallback: function(_) { console.log('onClick callback') }
+  }
+  
+  var ol // Initialise the root ol as undefined
 
   /** The first day has to be the beginning of a week, unless the month starts later */
   function chooseFirstDay(start) {
@@ -102,8 +104,10 @@ d3.tralendar = function module() {
         if (!d.isBlank) {
           li.classed('disabled', !d.hasEvent)
             .text(moment(d.moment).format('D'))
-          if (d.hasEvent)
-            li.on('click', config.callback)   
+          if (d.hasEvent) {
+            li.on('mouseover', config.hoverCallback)
+            li.on('click', config.clickCallback)
+          }   
         }
       }
 
@@ -141,8 +145,13 @@ d3.tralendar = function module() {
     return this
   }
 
-  exports.callback = function(_) {
-    config.callback = _
+  exports.clickCallback = function(_) {
+    config.clickCallback = _
+    return this
+  }
+
+  exports.hoverCallback = function(_) {
+    config.hoverCallback = _
     return this
   }
 

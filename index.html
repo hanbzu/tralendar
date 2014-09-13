@@ -69,7 +69,8 @@
       var tralendar = d3.tralendar()
           .starts(moment('2014-07-15', 'YYYY-MM-DD'))
           .span(span) // Number of days
-          .callback(dayClicked)
+          .clickCallback(dayClicked)
+          .hoverCallback(dayHover)
 
       var days = d3.nest()
           .key(function(d) { return d.date })
@@ -80,6 +81,10 @@
       d3.select("#datepicker")
             .datum(days)
             .call(tralendar)
+
+      function dayHover(_) {
+        console.log('hover', moment(_.moment).format('YYYY-MM-DD'))
+      }
 
       function dayClicked(_) {
         console.log('clicked', moment(_.moment).format('YYYY-MM-DD'))
