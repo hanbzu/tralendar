@@ -106,10 +106,10 @@ d3.tralendar = function module() {
           li.classed('disabled', !d.hasEvent)
             .text(moment(d.moment).format('D'))
           if (d.hasEvent) {
-            li.on('mouseover', config.mouseoverCallback)
-            li.on('mouseout', config.mouseoutCallback)
-            li.on('click', config.clickCallback)
-          }   
+            li.on('mouseover', function(_) { config.mouseoverCallback(_) })
+            li.on('mouseout', function(_) { config.mouseoutCallback(_) })
+            li.on('click', function(_) { config.clickCallback(_) })
+          }
         }
       }
 
