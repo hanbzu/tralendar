@@ -108,7 +108,11 @@ d3.tralendar = function module() {
           if (d.hasEvent) {
             li.on('mouseover', function(_) { config.mouseoverCallback(_) })
             li.on('mouseout', function(_) { config.mouseoutCallback(_) })
-            li.on('click', function(_) { config.clickCallback(_) })
+            li.on('click', function(_) {
+              var day = d3.select(this)
+              day.classed('chosen', !day.classed('chosen'))
+              config.clickCallback(_)
+            })
           }
         }
       }
