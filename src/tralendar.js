@@ -127,12 +127,15 @@ d3.tralendar = function module() {
       var li = ol.selectAll('li')
           .data(data, function(d) { return d.key })
 
-      var lid = li.enter()
+      var monthLi = li.enter()
         .append('li').classed('month', true)
+      
+      monthLi
         .append('h1').classed('monthname', true)
         .text(function(d) { return moment(d.key, 'YYYY-MM').format('MMMM') }) // July
         
-      lid.append('ol').classed('daygrid', true)
+      monthLi
+        .append('ol').classed('daygrid', true)
 
       li.exit()
         .remove()
