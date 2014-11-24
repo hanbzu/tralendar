@@ -64,7 +64,8 @@ d3.tralendar = function module() {
         hasEvent: inEventDays,
         yearmonth: _.format('YYYY-MM'),
         moment: _,
-        extra: inEventDays ? eventDays.get(day).extra : ''
+        extra: inEventDays ? eventDays.get(day).extra : '',
+        chosen: inEventDays ? eventDays.get(day).chosen : false
       }
     }
 
@@ -106,6 +107,7 @@ d3.tralendar = function module() {
           li.classed('disabled', !d.hasEvent)
             .text(moment(d.moment).format('D'))
           if (d.hasEvent) {
+            li.classed('chosen', d.chosen)
             li.on('mouseover', function(_) { config.mouseoverCallback(_) })
             li.on('mouseout', function(_) { config.mouseoutCallback(_) })
             li.on('click', function(_) {
