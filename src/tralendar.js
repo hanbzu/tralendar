@@ -7,8 +7,8 @@ d3.tralendar = function module() {
   var config = {
     start: chooseFirstDay(moment().hours(0).minutes(0).seconds(0)),
     days: 35,
-    mouseoverCallback: function(_) { console.log('mouseover callback') },
-    mouseoutCallback: function(_) { console.log('mouseout callback') },
+    mouseoverCallback: function(_) {  },
+    mouseoutCallback: function(_) {  },
     clickCallback: function(_) { console.log('onClick callback') }
   }
   
@@ -19,23 +19,29 @@ d3.tralendar = function module() {
     var startOfWeek = moment(start).weekday(0),
         startOfMonth = moment(start).date(1)
 
+    console.log('startOfWeek', startOfWeek.format('YYYY-MM-DD'))
+    console.log('startOfMonth', startOfMonth.format('YYYY-MM-DD'))
+
     return startOfWeek.isBefore(startOfMonth) ? startOfMonth : startOfWeek
   }
 
   /** A base calendar is an array of days from the start day to the
     end of the month containing the start day + the number of days */
-  function generateCalendar(start, days) {
-    
+  function generateCalendar() {
+
     /** Extend number of days till the end of the month */
     function extendedDays() {
-      var last = moment(start).add('days', days)
+      var last = moment(config.start).add(config.days, 'days')
           .endOf('month')
-          .hours(0).minutes(0).seconds(0)
-      return last.diff(start, 'days') + 1
+          .hours(23).minutes(59).seconds(59)
+
+      console.log('START', config.start.format('YYYY-MM-DD'))
+      console.log('LAST', last.format('YYYY-MM-DD'))
+      return last.diff(config.start, 'days') + 1
     }
 
     return d3.range(0, extendedDays()).map(function(_) {
-      return moment(start).add('days', _)
+      return moment(config.start).add(_, 'days')
     })
   }
 
@@ -64,8 +70,8 @@ d3.tralendar = function module() {
         hasEvent: inEventDays,
         yearmonth: _.format('YYYY-MM'),
         moment: _,
-        extra: inEventDays ? eventDays.get(day).extra : '',
-        chosen: inEventDays ? eventDays.get(day).chosen : false
+        extra: inEventDays ? eventDays.get(day)[0].extra : '', // I take 0 because I may get more than a day
+        chosen: inEventDays ? eventDays.get(day)[0].chosen : false
       }
     }
 
@@ -98,6 +104,8 @@ d3.tralendar = function module() {
       /** Here we update what's into each of the ol.calendar > li items (day, extra info, class, onclick...) */
       function updateDay(d) {
 
+        //console.log(d)
+
         var li = d3.select(this)
         
         // If there is no data (isBlank) we've got padding (blank li)
@@ -119,8 +127,10 @@ d3.tralendar = function module() {
         }
       }
 
-      var calendar = generateCalendar(config.start, config.days),
+      var calendar = generateCalendar(),
           data = generateExtendedCalendar(calendar, _data)
+
+      console.log('------>', data)
 
       if (!ol) // Create the root ol if it's not there yet
         ol = d3.select(this)

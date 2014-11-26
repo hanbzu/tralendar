@@ -4,10 +4,11 @@ var benv = require('benv'),
 /* The following comment avoids jslint error with 'to.exist' */
 /* jshint expr: true */
 
+/*
 describe('without benv setup', function() {
   it('does not find window', function() {
-    expect(function () { require('../src/tralendar3.js') }).to.throw(/window/) })
-})
+    expect(function () { require('../src/tralendar.js') }).to.throw(/window/) })
+})*/
 
 describe('tralendar.js', function() {
 
@@ -137,7 +138,13 @@ describe('tralendar.js', function() {
 
     var data = d3.nest()
         .key(function(d) { return d.date })
-        .map(rawData.map(function(_) { return { date: _, extra: '' } }), d3.map)
+        .map(rawData.map(function(_) {
+          return {
+            date: _,
+            chosen: _ === '2014-08-07' ? true : false,
+            extra: ''
+          }
+        }), d3.map)
 
     var tralendar = d3.tralendar()
         .starts(moment('2014-07-15', 'YYYY-MM-DD'))
@@ -151,8 +158,8 @@ describe('tralendar.js', function() {
     expect(d3.select('ol').classed('calendar')).to.be.true
 
     // creates html code with correct labels for jul-2013 and aug-2013
-    expect(d3.selectAll('ol.calendar>li:nth-child(1)').text().substring(0, 13)).to.equal('uztaila, 2014')
-    expect(d3.selectAll('ol.calendar>li:nth-child(2)').text().substring(0, 13)).to.equal('abuztua, 2014')
+    expect(d3.select('ol.calendar>li:nth-child(1)').select('h1.monthname').text().substring(0, 13)).to.equal('uztaila')
+    expect(d3.select('ol.calendar>li:nth-child(2)').select('h1.monthname').text().substring(0, 13)).to.equal('abuztua')
  
     //  creates html code with correct disabled days when no data is available'   
     var daysInJul = d3.select('ol.calendar>li:nth-child(1)>ol')
@@ -175,6 +182,10 @@ describe('tralendar.js', function() {
     expect(daysInAug.selectAll('li:nth-child(11)').classed('disabled')).to.be.false // 7th
     expect(daysInAug.selectAll('li:nth-child(12)').classed('disabled')).to.be.false // 8th
 
+    // Days are chosen ?
+    expect(daysInAug.selectAll('li:nth-child(11)').classed('chosen')).to.be.true // 7th (chosen)
+    expect(daysInAug.selectAll('li:nth-child(12)').classed('chosen')).to.be.false // 8th
+
     // Other days without content
     expect(daysInAug.selectAll('li:nth-child(5)').classed('disabled')).to.be.true
     expect(daysInAug.selectAll('li:nth-child(10)').classed('disabled')).to.be.true
@@ -185,5 +196,6 @@ describe('tralendar.js', function() {
     expect(daysInAug.selectAll('li:nth-child(2)').classed('blank')).to.be.true
     expect(daysInAug.selectAll('li:nth-child(3)').classed('blank')).to.be.true
     expect(daysInAug.selectAll('li:nth-child(4)').classed('blank')).to.be.true
+
   })  
 })
