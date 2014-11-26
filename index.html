@@ -76,7 +76,12 @@
       var days = d3.nest()
           .key(function(d) { return d.date })
           .map(trips.map(function(_) {
-            return { date: moment(_.dep, 'YYYY-MM-DD H:mm').format('YYYY-MM-DD'), extra: _.extra }
+            var theDate = moment(_.dep, 'YYYY-MM-DD H:mm').format('YYYY-MM-DD')
+            return {
+              date: theDate,
+              extra: _.extra,
+              chosen: (theDate === '2014-07-18' ? true : false)
+            }
           }), d3.map)
 
       d3.select("#datepicker")
