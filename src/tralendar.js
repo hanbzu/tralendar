@@ -7,9 +7,9 @@ d3.tralendar = function module() {
   var config = {
     start: chooseFirstDay(moment().startOf('day')),
     days: 35,
-    mouseoverCallback: function(_) {  },
-    mouseoutCallback: function(_) {  },
-    clickCallback: function(_) { console.log('onClick callback') }
+    mouseoverCallback: function(_) { console.log('mouseover callback', _) },
+    mouseoutCallback: function(_) { console.log('mouseout callback', _) },
+    clickCallback: function(_) { console.log('click callback', _) }
   }
   
   var ol // Initialise the root ol as undefined
