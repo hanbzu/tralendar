@@ -97,8 +97,6 @@ d3.tralendar = function module() {
       /** Here we update what's into each of the ol.calendar > li items (day, extra info, class, onclick...) */
       function updateDay(d) {
 
-        //console.log(d)
-
         var li = d3.select(this)
         
         // If there is no data (isBlank) we've got padding (blank li)
@@ -122,8 +120,6 @@ d3.tralendar = function module() {
 
       var calendar = generateCalendar(),
           data = generateExtendedCalendar(calendar, _data)
-
-      console.log('------>', data)
 
       if (!ol) // Create the root ol if it's not there yet
         ol = d3.select(this)
