@@ -16,12 +16,8 @@ d3.tralendar = function module() {
 
   /** The first day has to be the beginning of a week, unless the month starts later */
   function chooseFirstDay(start) {
-    var startOfWeek = moment(start).weekday(0),
-        startOfMonth = moment(start).date(1)
-
-    console.log('startOfWeek', startOfWeek.format('YYYY-MM-DD'))
-    console.log('startOfMonth', startOfMonth.format('YYYY-MM-DD'))
-
+    var startOfWeek = moment(start).startOf('week'),
+        startOfMonth = moment(start).startOf('month')
     return startOfWeek.isBefore(startOfMonth) ? startOfMonth : startOfWeek
   }
 
