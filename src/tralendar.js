@@ -5,7 +5,7 @@ if (typeof d3 === 'undefined') {
 d3.tralendar = function module() {
 
   var config = {
-    start: chooseFirstDay(moment().hours(0).minutes(0).seconds(0)),
+    start: chooseFirstDay(moment().startOf('day')),
     days: 35,
     mouseoverCallback: function(_) {  },
     mouseoutCallback: function(_) {  },
@@ -16,9 +16,7 @@ d3.tralendar = function module() {
 
   /** The first day has to be the beginning of a week, unless the month starts later */
   function chooseFirstDay(start) {
-    var startOfWeek = moment(start).startOf('week'),
-        startOfMonth = moment(start).startOf('month')
-    return startOfWeek.isBefore(startOfMonth) ? startOfMonth : startOfWeek
+    return moment.min(moment(start).startOf('week'), moment(start).startOf('month'))
   }
 
   /** A base calendar is an array of days from the start day to the
@@ -27,12 +25,11 @@ d3.tralendar = function module() {
 
     /** Extend number of days till the end of the month */
     function extendedDays() {
-      var last = moment(config.start).add(config.days, 'days')
+      var last = moment(config.start)
+          .add(config.days, 'days')
           .endOf('month')
-          .hours(23).minutes(59).seconds(59)
+          .endOf('day')
 
-      console.log('START', config.start.format('YYYY-MM-DD'))
-      console.log('LAST', last.format('YYYY-MM-DD'))
       return last.diff(config.start, 'days') + 1
     }
 
