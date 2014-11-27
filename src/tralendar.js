@@ -16,7 +16,7 @@ d3.tralendar = function module() {
 
   /** The first day has to be the beginning of a week, unless the month starts later */
   function chooseFirstDay(start) {
-    return moment.min(moment(start).startOf('week'), moment(start).startOf('month'))
+    return moment.max(moment(start).startOf('week'), moment(start).startOf('month'))
   }
 
   /** A base calendar is an array of days from the start day to the
