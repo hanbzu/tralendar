@@ -1,9 +1,8 @@
 // --- Calendar ---
 ol.calendar {
 
-  left: 10em; right: 10em;
-  width: 35em;
   display: inline-block;
+  margin-left: 1em; margin-right: 1em;
   text-align: left;
   font-size: 2em;
 
@@ -48,6 +47,10 @@ ol.calendar {
       @include not-selectable();
 
       border-radius: 50%;
+    }
+
+    li:nth-of-type(7n+1) {
+      clear: left;
     }
 
     li:not(.disabled):not(.blank):not(.chosen):hover {
