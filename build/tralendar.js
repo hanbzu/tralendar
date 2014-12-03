@@ -1,142 +1,194 @@
 /*
 tralendar 0.0.1- A calendar generator in D3, suitable to do date picking or date range picking
 https://github.com/hanbzu/tralendar.git
-Built on 2014-07-22
+Built on 2014-12-03
 */
-module.exports = {
-	add: function (a, b) {
-		return a + b;
-	},
+if (typeof d3 === 'undefined') {
+  throw new Error('missing d3');
+}
 
-	subtract: function (a, b) {
-		return a - b;
-	}
-}; ;
-var d3 = d3 || {} // For the current setup of mocha tests
-var moment = require('../bower_components/moment/moment.js').moment
+d3.tralendar = function module() {
 
-var isNode = typeof exports !== 'undefined' && this.exports !== exports
+  var config = {
+    start: chooseFirstDay(moment().startOf('day')),
+    days: 35,
+    mouseoverCallback: function(_) { console.log('mouseover callback', _) },
+    mouseoutCallback: function(_) { console.log('mouseout callback', _) },
+    clickCallback: function(_) { console.log('click callback', _) }
+  }
+  
+  var ol // Initialise the root ol as undefined
 
-console.log(moment)
+  /** The first day has to be the beginning of a week, unless the month starts later */
+  function chooseFirstDay(start) {
+    return moment.max(moment(start).startOf('week'), moment(start).startOf('month'))
+  }
 
+  /** A base calendar is an array of days from the start day to the
+    end of the month containing the start day + the number of days */
+  function generateCalendar() {
 
-d3.tralendar = function(config) {
+    /** Extend number of days till the end of the month */
+    function extendedDays() {
+      var last = moment(config.start)
+          .add(config.days, 'days')
+          .endOf('month')
+          .endOf('day')
 
-  function generateCalendar(ref) {
-    function createDays(ref) {
-      var days = []
-      function addBlankDays(howMany) {
-        for (i = 0; i < howMany; i++)
-          days.push(undefined)
-      }
-      function addDays(start, howMany) {
-        for (i = 0; i < howMany; i++)
-          days.push(moment(start).add('days', i)) 
-      }
-      var firstOfWeek = moment(ref).weekday(0),
-          firstOfMonth = moment(ref).date(1)
-      if (firstOfMonth.isBefore(firstOfWeek)) {
-        // 23 24 25 26 27 28 29
-        addDays(firstOfWeek, ref.daysInMonth() - firstOfWeek.diff(firstOfMonth, 'days'))
-      }
-      else {
-        //  _  _  1  2  3  4  5
-        addBlankDays(firstOfMonth.diff(firstOfWeek, 'days'))
-        addDays(firstOfMonth, ref.daysInMonth())
-      }
-      return days
+      return last.diff(config.start, 'days') + 1
     }
 
-    var nextMonth = moment(ref).add('months', 1)
-    return [
-      {
-        month: ref.format('MMMM, YYYY'),
-        days: createDays(ref).map(readablify)
-      },
-      {
-        month: nextMonth.format('MMMM, YYYY'),
-        days: createDays(moment(ref).add('months', 1)).map(readablify)
+    return d3.range(0, extendedDays()).map(function(_) {
+      return moment(config.start).add(_, 'days')
+    })
+  }
+
+  /** An extended calendar is nested by year-month and has padding to respect weekdays */
+  function generateExtendedCalendar(calendar, eventDays) {
+
+    /** Adds as many undefined items as extra days are in the first week of each month. */
+    function addDayPadding(_) {
+      var dayOne = moment(_[0].moment),
+          weekdayOne = moment(dayOne).weekday(0)
+      if (dayOne != weekdayOne)
+        return d3.range(dayOne.diff(weekdayOne, 'days'))
+                 .map(function() { return { isBlank: true } })
+                 .concat(_)
+      else
+        return _
+    }
+
+    /** Out of a moment element it creates a rich item depending on days set */
+    function buildItem(_) {
+
+      var day = moment(_).format('YYYY-MM-DD'),
+          inEventDays = eventDays.has(day)
+
+      return {
+        hasEvent: inEventDays,
+        yearmonth: _.format('YYYY-MM'),
+        moment: _,
+        extra: inEventDays ? eventDays.get(day)[0].extra : '', // I take 0 because I may get more than a day
+        chosen: inEventDays ? eventDays.get(day)[0].chosen : false
       }
-    ]
-  }
+    }
 
-  config = config || {}
-  config.start = moment()
-  config.days = 45
-  config.extractor = function(_) { return _ }
-  config.calendar = generateCalendar(config.start)
-
-  function readablify(_) {
-    if (_ === undefined)
-      return '---'
-    else 
-      return _.format('ddd, YYYY MM DD')      
-  }
-
-  console.log(config.calendar)
-
-  var tral = function(selection) {
-
-    return tral
+    // Nest a rich item array
+    return d3.nest()
+        .key(function(_) { return _.yearmonth }) // ...with year-month as a key
+        .sortKeys(d3.ascending) // ...ascending year-month order
+        .rollup(addDayPadding) // ...adding extra padding days as undefined items
+        .entries(calendar.map(buildItem)) // ...out of calendar days turned into rich items
   }
 
 
-  tral.span = function(start, days) {
-    config.start = start
-    config.days = days
-    return tral
+  var exports = function(_selection) {
+    _selection.each(function(_data) {
+      
+      /** Here we update what goes into ol.calendar (li items) */
+      function updateDayList(d) {
+
+        var ol = d3.select(this).select('ol').selectAll('li')
+                   .data(d.values)
+
+        ol.enter()
+          .append('li')
+          .each(updateDay)
+
+        ol.exit()
+          .remove()
+      }
+
+      /** Here we update what's into each of the ol.calendar > li items (day, extra info, class, onclick...) */
+      function updateDay(d) {
+
+        var li = d3.select(this)
+        
+        // If there is no data (isBlank) we've got padding (blank li)
+        li.classed('blank', d.isBlank)
+
+        if (!d.isBlank) {
+          li.classed('disabled', !d.hasEvent)
+            .text(moment(d.moment).format('D'))
+          if (d.hasEvent) {
+            li.classed('chosen', d.chosen)
+            li.on('mouseover', function(_) { config.mouseoverCallback(_) })
+            li.on('mouseout', function(_) { config.mouseoutCallback(_) })
+            li.on('click', function(_) {
+              var day = d3.select(this)
+              day.classed('chosen', !day.classed('chosen'))
+              config.clickCallback(_)
+            })
+          }
+        }
+      }
+
+      var calendar = generateCalendar(),
+          data = generateExtendedCalendar(calendar, _data)
+
+      if (!ol) // Create the root ol if it's not there yet
+        ol = d3.select(this)
+          .append('ol').classed('calendar', true)
+
+      var li = ol.selectAll('li')
+          .data(data, function(d) { return d.key })
+
+      var monthLi = li.enter()
+        .append('li').classed('month', true)
+      
+      monthLi
+        .append('h1').classed('monthname', true)
+        .text(function(d) { return moment(d.key, 'YYYY-MM').format('MMMM') }) // July
+        
+      monthLi
+        .append('ol').classed('daygrid', true)
+
+      li.exit()
+        .remove()
+
+      li.each(updateDayList)
+    })
   }
 
-  tral.extractor = function(_) {
-    config.extractor = _
-    return tral
+  exports.starts = function(_) {
+    if (!arguments.length) return config.start.format('YYYY-MM-DD')
+    config.start = chooseFirstDay(moment(_, 'YYYY-MM-DD'))
+    return this
   }
 
+  exports.span = function(_) {
+    if (!arguments.length) return config.days
+    config.days = _
+    return this
+  }
 
-  var myFunc = function() { return 3 }
-  return tral
+  exports.clickCallback = function(_) {
+    config.clickCallback = _
+    return this
+  }
+
+  exports.mouseoverCallback = function(_) {
+    config.mouseoverCallback = _
+    return this
+  }
+
+  exports.mouseoutCallback = function(_) {
+    config.mouseoutCallback = _
+    return this
+  }
+
+  exports.test = {
+    calendar: function() {
+      return generateCalendar(config.start, config.days)
+    },
+    extendedCalendar: function(calendar, data) {
+      return generateExtendedCalendar(calendar, data)
+    }
+  }
+
+  return exports
 }
-
-/*
-function generateMonth(monthnum) {
-  var m = moment().month(monthnum)
-  console.log(m.daysInMonth())  
-
-}
-
-generateMonth(0)
-generateMonth(2)
-*/
-
-
-
-/*
-var calendar = d3.tralendar()
-
-function chosen(day) {
-  console.log(day, "chosen")
-  d3.json("days2.json", function(error, json) {
-    if (error) return console.warn(error)
-    console.log(json)
-    d3.select("#datepicker")
-      .datum(json)
-      .call(calendar)
-  });
-}
-
-calendar.callback(chosen)
-
-d3.json("days.json", function(error, json) {
-  if (error) return console.warn(error)
-  d3.select("#datepicker")
-    .datum(json)
-    .call(calendar)
-});
-*/
-
-//exports.myFunc = d3.tralendar.myFunc
- 
-module.exports = d3.tralendar();
+;
 (function() {
   var cubes, list, math, num, number, opposite, race, square,
     __slice = [].slice;

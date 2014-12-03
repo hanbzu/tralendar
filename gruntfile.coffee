@@ -25,6 +25,13 @@ module.exports = (grunt) ->
         dest: 'js/'
         ext: '.js'
 
+    sass:
+      options:
+        sourceMap: true
+      dist:
+        files:
+          'style/main.css': 'style/main.scss'
+
     concat:
       options:
         separator: ';\n'
@@ -52,7 +59,7 @@ module.exports = (grunt) ->
 
     watch:
       scripts:
-        files: ['gruntfile.coffee', 'gruntfile.js', 'src/*.js', 'test/**/*.js']
+        files: ['gruntfile.coffee', 'gruntfile.js', 'src/*.js', 'test/**/*.js', 'style/*.scss']
         tasks: ['development']
       coffee:
         files: 'src/*.coffee'
@@ -72,5 +79,5 @@ module.exports = (grunt) ->
     .filterDev('grunt-*')
     .forEach(grunt.loadNpmTasks)
 
-  grunt.registerTask 'development', ['coffeelint', 'jshint', 'coffee', 'simplemocha']
+  grunt.registerTask 'development', ['coffeelint', 'jshint', 'coffee', 'sass', 'simplemocha']
   grunt.registerTask 'default', ['bower', 'development', 'concat', 'uglify']
