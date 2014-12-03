@@ -1,0 +1,45 @@
+@import 'reset';
+
+@mixin vendor-prefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
+
+@mixin not-selectable() {
+  -webkit-touch-callout: none;
+  @include vendor-prefix(user-select, none);
+}
+
+$color-days: gray;
+$color-day-hover: rgba(46, 204, 113,1.0);
+$bgcolor-day-hover: transparent;
+$color-day-chosen: white;
+$bgcolor-day-chosen: rgba(46, 204, 113,1.0);
+$color-border-hover: rgba(46, 204, 113,1.0);
+
+@font-face {
+  font-family: 'Exo 2';
+  font-style: normal;
+  font-weight: 200;
+  src: local('Exo 2 Extra Light'), local('Exo2-ExtraLight'), url(exo2_extra_light.woff) format('woff');
+}
+
+body {
+  padding-top: 20px;
+  padding-bottom: 40px;
+  font-family: 'Exo 2', sans-serif;
+  color: gray;
+  background: white;
+}
+
+.btn-main {
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+  display: block;
+}
+
+@import 'calendar';

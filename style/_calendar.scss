@@ -1,0 +1,96 @@
+// --- Calendar ---
+ol.calendar {
+
+  left: 10em; right: 10em;
+  width: 35em;
+  display: inline-block;
+  text-align: left;
+  font-size: 2em;
+
+  h1.monthname {
+    text-align: left;
+    margin-left: 2em;
+    padding-top: 2em;
+    font-size: 1em;
+    font-weight: 700;      
+    color: rgb(116, 116, 116);
+  }
+
+  ol.daygrid {
+    padding-left: 1em;
+    padding-right: 1em;
+    margin: 0px;
+    margin-top: 20px;
+    display: inline-block;
+
+    li {
+      text-align: center;
+      padding: 0;
+      clear:       none;
+      width:       2.2em;
+      height:      2.2em;
+      line-height: 2.2em;
+
+      float:       left;
+      margin:      0.14em;
+      overflow:    hidden;
+      border:      solid 0.05em transparent;
+      color:       $color-days;
+
+      font-size:   1.8em;
+      font-family: 'Exo 2';
+      font-style: normal;
+      font-weight: 300;
+
+
+      cursor:      pointer;
+
+      @include not-selectable();
+
+      border-radius: 50%;
+    }
+
+    li:not(.disabled):not(.blank):not(.chosen):hover {
+      color: $color-day-hover;
+      background-color: $bgcolor-day-hover;
+      border: solid 0.05em $color-border-hover;
+    }
+
+    /* Inactive day */
+    li.blank    {
+      cursor: default;
+      background-color: none;
+    }
+
+
+    /* Disabled day */
+    li.disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    /* Chosen day */
+    li.chosen {
+      color: $color-day-chosen;
+      background-color: $bgcolor-day-chosen;
+    }
+
+    /* Day content (UL/OL & P) */
+    li {
+
+      p {
+        position: absolute;
+        font-size: .3em;
+        display: block;
+        margin-top: -10px;
+      }
+      
+      p.top {
+        position: absolute;
+        font-size: .3em;
+        display: block;
+        margin-top: -65px;
+      }
+    }
+  }
+}
