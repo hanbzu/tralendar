@@ -5,6 +5,9 @@ Data driven calendar generator in D3, suitable to do date picking and show avail
 
 ## Example
 ```javascript
+// Using Browserify to import the module
+var tralendar = require('tralendar')
+
 // These are the dates that CAN be chosen together with any extra info
 var rawData = [
     { date: '2023-07-15', extra: '', chosen = false },
@@ -20,7 +23,7 @@ var data = d3.nest()
     .map(rawData, d3.map)
 
 // Note that the starts setting is optional (current date is the default)
-var tralendar = d3.tralendar()
+var calendar = tralendar()
     .starts('2023-07-15') // ISO 8601 dates: 'YYYY-MM-DD'
     .span(35) // Number of days, at least
     .callback(function(_) {
@@ -30,7 +33,7 @@ var tralendar = d3.tralendar()
 // Select where it will go, add the data and generate!
 d3.select('body')
   .datum(data)
-  .call(tralendar)
+  .call(calendar)
 ```
 
 As you can see above, in order to get notified when the user clicks on any valid day you have to provide a callback function.
