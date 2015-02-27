@@ -1,8 +1,7 @@
-if (typeof d3 === 'undefined') {
-  throw new Error('missing d3');
-}
+var d3 = require('d3'),
+    moment = require('moment')
 
-d3.tralendar = function module() {
+function tralendar() {
 
   var config = {
     start: chooseFirstDay(moment().startOf('day')),
@@ -183,3 +182,5 @@ d3.tralendar = function module() {
 
   return exports
 }
+
+module.exports = tralendar

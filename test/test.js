@@ -7,7 +7,7 @@ var benv = require('benv'),
 /*
 describe('without benv setup', function() {
   it('does not find window', function() {
-    expect(function () { require('../src/tralendar.js') }).to.throw(/window/) })
+    expect(function () { require('../src/_calendar.js') }).to.throw(/window/) })
 })*/
 
 describe('tralendar.js', function() {
@@ -16,8 +16,9 @@ describe('tralendar.js', function() {
     benv.setup(function() {
       benv.expose({
         // Dependencies
-        d3: require('../bower_components/d3/d3.js'),
-        moment: require('../bower_components/moment/moment.js'),
+        d3: require('d3'),
+        moment: require('moment'),
+        tralendar: require('../src/tralendar'),
         // Helper functions
         toMoment: function(_) { return moment(_ + ' 00:00', 'YYYY-MM-DD HH:mm') },
         toReadable: function(_) { return _.format('YYYY-MM-DD HH:mm') }
@@ -37,36 +38,33 @@ describe('tralendar.js', function() {
   })
 
   it('chooses the first day of week as start date when into month', function() {
-    require('../src/tralendar.js')
     // If I say '2014-07-16' (wed) it should take the start of week (either mon or sun)
     var iSay = moment('2014-07-16', 'YYYY-MM-DD'),
         iTtakes = moment(iSay).weekday(0),
-        tralendar = d3.tralendar().starts(iSay.format('YYYY-MM-DD'))
-    expect(tralendar.starts()).to.equal(iTtakes.format('YYYY-MM-DD'))
+        _calendar = tralendar().starts(iSay.format('YYYY-MM-DD'))
+    expect(_calendar.starts()).to.equal(iTtakes.format('YYYY-MM-DD'))
   })
 
   it('chooses the first day of month as start date when at first week', function() {
-    require('../src/tralendar.js')
     // If I say '2014-08-02' (sat) it should take the start of the month
     var iSay = moment('2014-08-02', 'YYYY-MM-DD'),
         iTtakes = moment('2014-08-01', 'YYYY-MM-DD'),
-        tralendar = d3.tralendar().starts(iSay.format('YYYY-MM-DD'))
-    expect(tralendar.starts()).to.equal(iTtakes.format('YYYY-MM-DD'))
+        _calendar = tralendar().starts(iSay.format('YYYY-MM-DD'))
+    expect(_calendar.starts()).to.equal(iTtakes.format('YYYY-MM-DD'))
   })
 
   it('creates valid calendar sets', function() {
     
-    require('../src/tralendar.js')
     moment.lang('eu')
     
     function tryThis(date, days, result) {
       result = result.map(toMoment).map(toReadable)
-      var tralendar = d3.tralendar()
+      var _calendar = tralendar()
           .starts(toMoment(date, 'YYYY-MM-DD'))
           .span(days)
 
       // It does not compare array contents if 'deep' is not used
-      expect(result).to.deep.equal(tralendar.test.calendar().map(toReadable))
+      expect(result).to.deep.equal(_calendar.test.calendar().map(toReadable))
     }
     
     tryThis('2014-07-21', 30, [
@@ -94,8 +92,6 @@ describe('tralendar.js', function() {
 
   it('creates a valid rich calendar sets', function() {
 
-    require('../src/tralendar.js')
-
     function tryThis(calendar, eventDays, keys, paddings) {
 
       function countBlankItems(_) {
@@ -109,8 +105,8 @@ describe('tralendar.js', function() {
                       .key(function(d) { return d.date })
                       .map(eventDays.map(function(_) { return { date: '2014-' + _, extra: '' } }), d3.map)
 
-      var tralendar = d3.tralendar(),
-          extendedCalendar = tralendar.test.extendedCalendar(calendar, eventDays),
+      var _calendar = tralendar(),
+          extendedCalendar = _calendar.test.extendedCalendar(calendar, eventDays),
           extendedCalendarKeys = extendedCalendar.map(function(_) { return _.key }),
           extendedCalendarPaddings = extendedCalendar.map(countBlankItems)
 
@@ -132,7 +128,6 @@ describe('tralendar.js', function() {
   it('generates correct html', function() {
 
     moment.lang('eu')
-    require('../src/tralendar.js')
 
     var rawData = [ '2014-07-15', '2014-07-20', '2014-07-21', '2014-07-22', '2014-08-07', '2014-08-08' ]
 
@@ -146,13 +141,13 @@ describe('tralendar.js', function() {
           }
         }), d3.map)
 
-    var tralendar = d3.tralendar()
+    var _calendar = tralendar()
         .starts(moment('2014-07-15', 'YYYY-MM-DD'))
         .span(35) // Number of days
 
     d3.select('body')
       .datum(data)
-      .call(tralendar)
+      .call(_calendar)
 
     // creates html code for a calendar class ol
     expect(d3.select('ol').classed('calendar')).to.be.true

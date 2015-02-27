@@ -2,38 +2,42 @@
   "name": "tralendar",
   "version": "0.0.1",
   "description": "A calendar generator in D3, suitable to do date picking or date range picking",
-  "main": "build/tralendar.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "grunt development"
-  },
+  "author": "Hibai Unzueta (http://hibaiunzueta.com/)",
+  "homepage": "https://github.com/hanbzu/tralendar",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/hanbzu/tralendar.git"
   },
-  "author": "Hibai Unzueta (http://hibaiunzueta.com/)",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/hanbzu/tralendar/issues"
   },
-  "homepage": "https://github.com/hanbzu/tralendar",
+  "main": "src/tralendar.js",
+  "scripts": {
+    "test": "gulp development"
+  },
   "devDependencies": {
     "benv": "^0.1.6",
+    "brfs": "^1.4.0",
+    "browserify": "^9.0.3",
     "chai": "^1.9.1",
-    "grunt": "^0.4.5",
-    "grunt-bower-task": "^0.4.0",
-    "grunt-coffeelint": "0.0.10",
-    "grunt-contrib-coffee": "^0.10.1",
-    "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.5.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-sass": "^0.16.1",
-    "grunt-simple-mocha": "^0.4.0",
-    "install": "^0.1.7",
-    "matchdep": "^0.3.0",
-    "npm": "^1.4.21"
+    "gulp": "^3.8.10",
+    "gulp-autoprefixer": "^2.1.0",
+    "gulp-docco": "0.0.4",
+    "gulp-jshint": "^1.9.2",
+    "gulp-mocha": "^2.0.0",
+    "gulp-replace": "^0.5.2",
+    "gulp-sass": "^1.3.2",
+    "gulp-sourcemaps": "^1.3.0",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "jshint-stylish": "^1.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.4.0"
+  },
+  "dependencies": {
+    "d3": "^3.5.5",
+    "moment": "^2.9.0"
   }
 }
