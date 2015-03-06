@@ -87,5 +87,5 @@ gulp.task('watch', function () {
   gulp.watch('playground/index.js', ['lint', 'js-bundle'])
 })
 
-gulp.task('docs', ['js-docco', 'diagrams'])
+gulp.task('docs', ['js-docco'])
 gulp.task('default', ['lint', 'test', 'js-bundle', 'docs'])

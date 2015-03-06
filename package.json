@@ -14,7 +14,7 @@
   },
   "main": "src/tralendar.js",
   "scripts": {
-    "test": "gulp development"
+    "test": "gulp test"
   },
   "devDependencies": {
     "benv": "^0.1.6",
