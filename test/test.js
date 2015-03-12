@@ -55,7 +55,7 @@ describe('tralendar.js', function() {
 
   it('creates valid calendar sets', function() {
     
-    moment.lang('eu')
+    moment.locale('eu')
     
     function tryThis(date, days, result) {
       result = result.map(toMoment).map(toReadable)
@@ -127,7 +127,7 @@ describe('tralendar.js', function() {
 
   it('generates correct html', function() {
 
-    moment.lang('eu')
+    moment.locale('eu')
 
     var rawData = [ '2014-07-15', '2014-07-20', '2014-07-21', '2014-07-22', '2014-08-07', '2014-08-08' ]
 
