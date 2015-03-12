@@ -54,19 +54,19 @@ var _calendar = tralendar()
     .mouseoverCallback(dayMouseover)
     .mouseoutCallback(dayMouseout)
 
-var days = d3.nest()
-    .key(function(d) { return d.date })
-    .map(trips.map(function(_) {
-      var theDate = moment(_.dep, 'YYYY-MM-DD H:mm').format('YYYY-MM-DD')
-      return {
-        date: theDate,
-        extra: _.extra,
-        chosen: (theDate === '2014-07-18' ? true : false)
-      }
-    }), d3.map)
+var dataMap = d3.map()
+
+trips.forEach(function(_) {
+  var date = moment(_.dep, 'YYYY-MM-DD H:mm').format('YYYY-MM-DD')
+  dataMap.set(date, {
+    date: date,
+    extra: _.extra,
+    chosen: (date === '2014-07-18' ? true : false)
+  })
+})
 
 d3.select("#datepicker")
-      .datum(days)
+      .datum(dataMap)
       .call(_calendar)
 
 function dayMouseover(_) {

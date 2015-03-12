@@ -19,9 +19,11 @@ var rawData = [
 ]
 
 // We need to create an associative map first
-var data = d3.nest()
-    .key(function(d) { return d.date })
-    .map(rawData, d3.map)
+var dataMap = d3.map()
+
+rawData.forEach(function(d) {
+  dataMap.set(d.date, d)
+})
 
 // Note that the starts setting is optional (current date is the default)
 var calendar = tralendar()
@@ -33,7 +35,7 @@ var calendar = tralendar()
 
 // Select where it will go, add the data and generate!
 d3.select('body')
-  .datum(data)
+  .datum(dataMap)
   .call(calendar)
 ```
 

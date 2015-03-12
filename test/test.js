@@ -131,22 +131,24 @@ describe('tralendar.js', function() {
 
     var rawData = [ '2014-07-15', '2014-07-20', '2014-07-21', '2014-07-22', '2014-08-07', '2014-08-08' ]
 
-    var data = d3.nest()
-        .key(function(d) { return d.date })
-        .map(rawData.map(function(_) {
-          return {
-            date: _,
-            chosen: _ === '2014-08-07' ? true : false,
+    var dataMap = d3.map()
+
+    rawData.forEach(function(dateStr) {
+      var key = dateStr,
+          value = {
+            date: dateStr,
+            chosen: dateStr === '2014-08-07' ? true : false,
             extra: ''
           }
-        }), d3.map)
+      dataMap.set(key, value)
+    })
 
     var _calendar = tralendar()
         .starts(moment('2014-07-15', 'YYYY-MM-DD'))
         .span(35) // Number of days
 
     d3.select('body')
-      .datum(data)
+      .datum(dataMap)
       .call(_calendar)
 
     // creates html code for a calendar class ol

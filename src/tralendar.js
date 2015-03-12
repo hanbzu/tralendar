@@ -62,11 +62,14 @@ function tralendar() {
       var day = moment(_).format('YYYY-MM-DD'),
           inEventDays = eventDays.has(day)
 
+      if (inEventDays)
+        console.log(eventDays.get(day))
+
       return {
         hasEvent: inEventDays,
         yearmonth: _.format('YYYY-MM'),
         moment: _,
-        chosen: inEventDays ? eventDays.get(day)[0].chosen : false
+        chosen: inEventDays ? eventDays.get(day).chosen : false
       }
     }
 
