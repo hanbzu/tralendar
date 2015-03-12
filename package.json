@@ -1,6 +1,6 @@
 {
   "name": "tralendar",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "A calendar generator in D3, suitable to do date picking or date range picking",
   "author": "Hibai Unzueta (http://hibaiunzueta.com/)",
   "homepage": "https://github.com/hanbzu/tralendar",
