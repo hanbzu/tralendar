@@ -5,16 +5,17 @@ Data driven calendar generator in D3, suitable to do date picking and show avail
 
 ## Example
 ```javascript
-// Using Browserify to import the module
-var tralendar = require('tralendar')
+// Using Browserify/Node.js to import the module and D3
+var tralendar = require('tralendar'),
+    d3 = require('d3')
 
-// These are the dates that CAN be chosen together with any extra info
+// These are the dates that CAN be chosen
 var rawData = [
-    { date: '2023-07-15', extra: '', chosen = false },
-    { date: '2023-07-20', extra: '', chosen = false },
-    { date: '2023-07-21', extra: '', chosen = true }, // It will appear chosen
-    { date: '2023-08-12', extra: '', chosen = false },
-    { date: '2023-08-14', extra: '', chosen = false }
+    { date: '2023-07-15', chosen: false },
+    { date: '2023-07-20', chosen: false },
+    { date: '2023-07-21', chosen: true }, // It will appear chosen
+    { date: '2023-08-12', chosen: false },
+    { date: '2023-08-14', chosen: false }
 ]
 
 // We need to create an associative map first
@@ -26,7 +27,7 @@ var data = d3.nest()
 var calendar = tralendar()
     .starts('2023-07-15') // ISO 8601 dates: 'YYYY-MM-DD'
     .span(35) // Number of days, at least
-    .callback(function(_) {
+    .clickCallback(function(_) {
       console.log('clicked', _)
     })
 
