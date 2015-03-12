@@ -12666,21 +12666,20 @@ function tralendar() {
     return moment.max(moment(start).startOf('week'), moment(start).startOf('month'))
   }
 
+  // Extend number of days till the end of the month
+  function extendedSpan(span) {
+    var last = moment(config.start)
+        .add(span, 'days')
+        .endOf('month')
+        .endOf('day')
+
+    return last.diff(config.start, 'days') + 1
+  }
+
   // A base calendar is an array of days from the start day to the
   // end of the month containing the start day + the number of days
   function generateCalendar() {
-
-    // Extend number of days till the end of the month
-    function extendedDays() {
-      var last = moment(config.start)
-          .add(config.days, 'days')
-          .endOf('month')
-          .endOf('day')
-
-      return last.diff(config.start, 'days') + 1
-    }
-
-    return d3.range(0, extendedDays()).map(function(_) {
+    return d3.range(0, config.days).map(function(_) {
       return moment(config.start).add(_, 'days')
     })
   }
@@ -12707,9 +12706,6 @@ function tralendar() {
 
       var day = moment(_).format('YYYY-MM-DD'),
           inEventDays = eventDays.has(day)
-
-      if (inEventDays)
-        console.log(eventDays.get(day))
 
       return {
         hasEvent: inEventDays,
@@ -12809,7 +12805,7 @@ function tralendar() {
 
   exports.span = function(_) {
     if (!arguments.length) return config.days
-    config.days = _
+    config.days = extendedSpan(_)
     return this
   }
 
