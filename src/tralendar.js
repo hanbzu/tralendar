@@ -11,18 +11,20 @@ function tralendar() {
     clickCallback: function(_) { console.log('click callback', _) }
   }
   
-  var ol // Initialise the root ol as undefined
+  // Initialise the root ol as undefined
+  var ol
 
-  /** The first day has to be the beginning of a week, unless the month starts later */
+  // The first day has to be the beginning of a week,
+  // unless the month starts later
   function chooseFirstDay(start) {
     return moment.max(moment(start).startOf('week'), moment(start).startOf('month'))
   }
 
-  /** A base calendar is an array of days from the start day to the
-    end of the month containing the start day + the number of days */
+  // A base calendar is an array of days from the start day to the
+  // end of the month containing the start day + the number of days
   function generateCalendar() {
 
-    /** Extend number of days till the end of the month */
+    // Extend number of days till the end of the month
     function extendedDays() {
       var last = moment(config.start)
           .add(config.days, 'days')
@@ -37,10 +39,12 @@ function tralendar() {
     })
   }
 
-  /** An extended calendar is nested by year-month and has padding to respect weekdays */
+  // An extended calendar is nested by year-month
+  // and has padding to respect weekdays
   function generateExtendedCalendar(calendar, eventDays) {
 
-    /** Adds as many undefined items as extra days are in the first week of each month. */
+    // Adds as many undefined items as additional days
+    // are in the first week of each month.
     function addDayPadding(_) {
       var dayOne = moment(_[0].moment),
           weekdayOne = moment(dayOne).weekday(0)
@@ -52,7 +56,7 @@ function tralendar() {
         return _
     }
 
-    /** Out of a moment element it creates a rich item depending on days set */
+    // Out of a moment element it creates a rich item depending on days set
     function buildItem(_) {
 
       var day = moment(_).format('YYYY-MM-DD'),
@@ -62,24 +66,26 @@ function tralendar() {
         hasEvent: inEventDays,
         yearmonth: _.format('YYYY-MM'),
         moment: _,
-        extra: inEventDays ? eventDays.get(day)[0].extra : '', // I take 0 because I may get more than a day
         chosen: inEventDays ? eventDays.get(day)[0].chosen : false
       }
     }
 
-    // Nest a rich item array
+    // Nest a rich item array with `yearmonth` as a key,
+    // ordered in ascending year-month, adding additional
+    // padding days as undefined items out of calendar days
+    // turned into rich items.
     return d3.nest()
-        .key(function(_) { return _.yearmonth }) // ...with year-month as a key
-        .sortKeys(d3.ascending) // ...ascending year-month order
-        .rollup(addDayPadding) // ...adding extra padding days as undefined items
-        .entries(calendar.map(buildItem)) // ...out of calendar days turned into rich items
+        .key(function(_) { return _.yearmonth })
+        .sortKeys(d3.ascending)
+        .rollup(addDayPadding)
+        .entries(calendar.map(buildItem))
   }
 
 
   var exports = function(_selection) {
     _selection.each(function(_data) {
       
-      /** Here we update what goes into ol.calendar (li items) */
+      // Here we update what goes into ol.calendar (li items)
       function updateDayList(d) {
 
         var ol = d3.select(this).select('ol').selectAll('li')
@@ -93,7 +99,7 @@ function tralendar() {
           .remove()
       }
 
-      /** Here we update what's into each of the ol.calendar > li items (day, extra info, class, onclick...) */
+      // Here we update what's in each of the ol.calendar > li items
       function updateDay(d) {
 
         var li = d3.select(this)
@@ -120,7 +126,8 @@ function tralendar() {
       var calendar = generateCalendar(),
           data = generateExtendedCalendar(calendar, _data)
 
-      if (!ol) // Create the root ol if it's not there yet
+      // Create the root ol if it's not there yet
+      if (!ol)
         ol = d3.select(this)
           .append('ol').classed('calendar', true)
 
@@ -130,9 +137,10 @@ function tralendar() {
       var monthLi = li.enter()
         .append('li').classed('month', true)
       
+      // The MMMM format would be for example 'July'
       monthLi
         .append('h1').classed('monthname', true)
-        .text(function(d) { return moment(d.key, 'YYYY-MM').format('MMMM') }) // July
+        .text(function(d) { return moment(d.key, 'YYYY-MM').format('MMMM') })
         
       monthLi
         .append('ol').classed('daygrid', true)
