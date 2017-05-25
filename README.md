@@ -87,7 +87,7 @@ It uses of course [d3.js](http://d3js.org/) and [moment.js](http://momentjs.com/
 
 ## Contributing
 
-Grunt is being used to manage tasks and [mocha](http://visionmedia.github.io/mocha/) is used together with [chai](http://chaijs.com/) for tests. [benv](ttps://github.com/artsy/benv) provides a minimal browser environment for d3 generated html testig.
+Grunt is being used to manage tasks and [mocha](http://mochajs.org/) is used together with [chai](http://chaijs.com/) for tests. [benv](ttps://github.com/artsy/benv) provides a minimal browser environment for d3 generated html testig.
 
 
 ## License
